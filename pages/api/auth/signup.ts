@@ -1,6 +1,8 @@
+import connectMongo from '../../../utils/mongodb'
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createRouter, expressWrapper } from "next-connect";
 import cors from "cors";
+import Question from "@/models/Question";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
@@ -11,8 +13,12 @@ router.use(async (req, res, next) => {
     const end = Date.now();
     console.log(`Request took ${end - start}ms`);
 })
-    .post((req, res) => {
-        res.json({ message: "SIGNUP ROUTE" });
+    .post(async(req, res) => {
+        const questions = await Question.find().populate(
+            "options"
+        );
+
+        res.json({ message: "SIGNUP ROUTE" , questions});
     });
 
 
