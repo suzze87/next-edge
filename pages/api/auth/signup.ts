@@ -2,7 +2,7 @@ import connectMongo from '../../../utils/mongodb'
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createRouter, expressWrapper } from "next-connect";
 import cors from "cors";
-import Question from "@/models/Question";
+import Question from "../../../models/Question";
 
 const router = createRouter<NextApiRequest, NextApiResponse>();
 
@@ -13,12 +13,13 @@ router.use(async (req, res, next) => {
     const end = Date.now();
     console.log(`Request took ${end - start}ms`);
 })
-    .post(async(req, res) => {
+    .post(async (req, res) => {
+        await connectMongo();
         const questions = await Question.find().populate(
             "options"
         );
 
-        res.json({ message: "SIGNUP ROUTE" , questions});
+        res.json({ message: "SIGNUP ROUTE", questions });
     });
 
 
